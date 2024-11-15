@@ -208,10 +208,14 @@ func getTempFromLocal(client *http.Client, zip string, apiKey string) (Response,
 	otel.GetTextMapPropagator().Inject(ctx, propagation.HeaderCarrier(req.Header))
 
 	res, err := client.Do(req)
-	if err != nil || res.StatusCode != http.StatusOK {
+	if err != nil {
 		return Response{}, err
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return Response{}, errors.New("can not find zipcode")
+	}
 
 	rr := Response{}
 	err = json.NewDecoder(res.Body).Decode(&rr)

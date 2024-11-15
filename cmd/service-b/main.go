@@ -59,7 +59,6 @@ func initProvider(serviceName, collectorURL string) (func(context.Context) error
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		fmt.Println("collectorURL: ", collectorURL)
 		return nil, fmt.Errorf("failed to create gRPC connection to collector: %w", err)
 	}
 
@@ -143,8 +142,6 @@ func getTemp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "api_key is required", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("apiKey: ", apiKey)
-	fmt.Println("zip: ", zip)
 
 	client := &http.Client{}
 	location, err := getLocation(ctx, client, zip)
@@ -159,7 +156,6 @@ func getTemp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res.City = location
-	fmt.Println("res: ", res)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(res)
@@ -188,10 +184,6 @@ func getLocation(ctx context.Context, client *http.Client, zip string) (string, 
 	location := fastjson.GetString(r, "localidade")
 	if location == "" {
 		return "", errors.New("can not find zipcode")
-	}
-
-	if location == "" {
-		return "", errors.New("error getting location from viacep")
 	}
 
 	return location, nil

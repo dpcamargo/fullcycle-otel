@@ -9,6 +9,17 @@ services:
     networks:
       - otel
 
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    restart: always
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - 9411:9411
+    networks:
+      - otel
+
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -44,21 +55,14 @@ services:
     networks:
       - otel
 
-  goapp:
-    container_name: goapp
+  service-a:
+    container_name: service-a
     restart: unless-stopped
     # command: tail -f /dev/null
     build:
       context: .
+      dockerfile: Dockerfile.service-a
     environment:
-      - TITLE=Microservice Demo
-      - CONTENT=This is a demo of a microservice
-      - BACKGROUND_COLOR=green
-      - RESPONSE_TIME=1000
-      - EXTERNAL_CALL_URL=http://goapp2:8181
-      - EXTERNAL_CALL_METHOD=GET
-      - REQUEST_NAME_OTEL=microservice-demo-request
-      - OTEL_SERVICE_NAME=microservice-demo
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
       - HTTP_PORT=:8080
     ports:
@@ -70,47 +74,18 @@ services:
     networks:
       - otel
 
-  goapp2:
-    container_name: goapp2
+  service-b:
+    container_name: service-b
     restart: unless-stopped
+    # command: tail -f /dev/null
     build:
       context: .
+      dockerfile: Dockerfile.service-b
     environment:
-      - TITLE=Microservice Demo 2
-      - CONTENT=This is a demo of a microservice
-      - BACKGROUND_COLOR=blue
-      - EXTERNAL_CALL_URL=http://goapp3:8282
-      - EXTERNAL_CALL_METHOD=GET
-      - RESPONSE_TIME=2000
-      - REQUEST_NAME_OTEL=microservice-demo2-request
-      - OTEL_SERVICE_NAME=microservice-demo2
       - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
-      - HTTP_PORT=:8181
+      - HTTP_PORT=:8081
     ports:
-      - "8181:8181"
-    depends_on:
-      - jaeger-all-in-one
-      - prometheus
-      - otel-collector
-    networks:
-      - otel
-
-  goapp3:
-    container_name: goapp3
-    restart: unless-stopped
-    build:
-      context: .
-    environment:
-      - TITLE=Microservice Demo 3
-      - CONTENT=This is a demo of a microservice
-      - BACKGROUND_COLOR=green
-      - RESPONSE_TIME=2000
-      - REQUEST_NAME_OTEL=microservice-demo3-request
-      - OTEL_SERVICE_NAME=microservice-demo3
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
-      - HTTP_PORT=:8282
-    ports:
-      - "8282:8282"
+      - "8081:8081"
     depends_on:
       - jaeger-all-in-one
       - prometheus

@@ -4,11 +4,17 @@ receivers:
       grpc:
         endpoint: "0.0.0.0:4317"
 
+  zipkin:
+    endpoint: "0.0.0.0:9411"
+
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
 
   debug:
+
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
 
   otlp:
     endpoint: jaeger-all-in-one:4317
@@ -21,9 +27,9 @@ processors:
 service:
   pipelines:
     traces:
-      receivers: [otlp]
+      receivers: [otlp, zipkin]
       processors: [batch]
-      exporters: [debug, otlp]
+      exporters: [debug, otlp, zipkin]
     metrics:
       receivers: [otlp]
       processors: [batch]

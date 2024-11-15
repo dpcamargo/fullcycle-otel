@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/prometheus/client_golang v1.16.0
 	github.com/spf13/viper v1.16.0
+	github.com/valyala/fastjson v1.6.4
 	go.opentelemetry.io/otel v1.18.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.18.0
 	google.golang.org/grpc v1.58.0

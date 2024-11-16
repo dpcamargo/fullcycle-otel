@@ -3,8 +3,6 @@ module github.com/dpcamargo/fullcycle-otel
 go 1.21.1
 
 require (
-	github.com/go-chi/chi v1.5.5
-	github.com/go-chi/chi/v5 v5.0.10
 	github.com/prometheus/client_golang v1.16.0
 	github.com/spf13/viper v1.16.0
 	github.com/valyala/fastjson v1.6.4
@@ -48,7 +46,7 @@ require (
 	github.com/prometheus/procfs v0.10.1 // indirect
 	go.opentelemetry.io/otel/metric v1.18.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.18.0
-	go.opentelemetry.io/otel/trace v1.18.0
+	go.opentelemetry.io/otel/trace v1.18.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
